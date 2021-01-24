@@ -34,6 +34,8 @@ android {
 
 dependencies {
 
+    implementation 'com.funin.base.funinbase:funinbase:0.0.1-alpha7@aar'
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
