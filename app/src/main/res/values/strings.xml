@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NewsCalendar</string>
+    <string name="main_query_hint">Input query</string>
+    <string name="main_query_empty_text">The result is empty</string>
 </resources>

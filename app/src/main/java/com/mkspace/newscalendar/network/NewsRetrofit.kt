@@ -8,12 +8,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object NewsRetrofit {
 
-    const val KAKAO_API_END_POINT = "https://openapi.naver.com/v1/"
+    const val NAVER_API_END_POINT = "https://openapi.naver.com/v1/"
 
     fun <T> create(
         service: Class<T>,
         client: OkHttpClient,
-        httpUrl: String = KAKAO_API_END_POINT
+        httpUrl: String = NAVER_API_END_POINT
     ): T = Retrofit.Builder()
         .baseUrl(httpUrl)
         .client(client)
@@ -24,7 +24,7 @@ object NewsRetrofit {
 
     inline fun <reified T : Any> create(
         client: OkHttpClient,
-        httpUrl: String = KAKAO_API_END_POINT
+        httpUrl: String = NAVER_API_END_POINT
     ): T {
         require(httpUrl.isNotBlank()) { "Parameter httpUrl cannot be blank." }
         return create(service = T::class.java, httpUrl = httpUrl, client = client)
