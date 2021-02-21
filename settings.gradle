@@ -1,2 +1,4 @@
+include ':image'
+include ':base'
 include ':app'
 rootProject.name = "NewsCalendar"
