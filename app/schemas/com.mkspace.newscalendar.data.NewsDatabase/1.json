@@ -2,16 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "06874df728cdb54b62fc2db14a062aa7",
+    "identityHash": "a5c702995224c491b19f6944e936f5f7",
     "entities": [
       {
         "tableName": "articles",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`article_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `article_title` TEXT NOT NULL, `article_link` TEXT NOT NULL, `article_original_link` TEXT NOT NULL, `article_description` TEXT NOT NULL, `article_publish_date` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`article_original_link` TEXT NOT NULL, `article_title` TEXT NOT NULL, `article_link` TEXT NOT NULL, `article_description` TEXT NOT NULL, `article_publish_date` TEXT NOT NULL, `article_created_at` INTEGER NOT NULL, PRIMARY KEY(`article_original_link`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "article_id",
-            "affinity": "INTEGER",
+            "fieldPath": "originalLink",
+            "columnName": "article_original_link",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -27,12 +27,6 @@
             "notNull": true
           },
           {
-            "fieldPath": "originalLink",
-            "columnName": "article_original_link",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
             "fieldPath": "description",
             "columnName": "article_description",
             "affinity": "TEXT",
@@ -43,22 +37,102 @@
             "columnName": "article_publish_date",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "article_created_at",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "article_id"
+            "article_original_link"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "article_remote_keys",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`query_date` TEXT NOT NULL, `after` INTEGER, PRIMARY KEY(`query_date`))",
+        "fields": [
+          {
+            "fieldPath": "queryDate",
+            "columnName": "query_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "after",
+            "columnName": "after",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "query_date"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "article_query_relations",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`relation_article_original_link` TEXT NOT NULL, `relation_query_date` TEXT NOT NULL, PRIMARY KEY(`relation_query_date`, `relation_article_original_link`), FOREIGN KEY(`relation_article_original_link`) REFERENCES `articles`(`article_original_link`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "articleOriginalLink",
+            "columnName": "relation_article_original_link",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "queryDate",
+            "columnName": "relation_query_date",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "relation_query_date",
+            "relation_article_original_link"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_article_query_relations_relation_query_date",
+            "unique": false,
+            "columnNames": [
+              "relation_query_date"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_article_query_relations_relation_query_date` ON `${TABLE_NAME}` (`relation_query_date`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "articles",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "relation_article_original_link"
+            ],
+            "referencedColumns": [
+              "article_original_link"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '06874df728cdb54b62fc2db14a062aa7')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a5c702995224c491b19f6944e936f5f7')"
     ]
   }
 }

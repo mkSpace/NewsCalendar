@@ -1,6 +1,7 @@
 package com.mkspace.newscalendar.di
 
 import com.mkspace.newscalendar.BuildConfig
+import com.mkspace.newscalendar.network.NaverAuthorizationInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,9 +26,12 @@ object NetworkModule {
     }
 
     @Provides
-    fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
+    fun provideOkHttpClient(
+        authorizationInterceptor: NaverAuthorizationInterceptor
+    ): OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(TIMEOUT_CONNECT, TimeUnit.SECONDS)
         .writeTimeout(TIMEOUT_CONNECT, TimeUnit.SECONDS)
         .addInterceptor(createLoggingInterceptor())
+        .addInterceptor(authorizationInterceptor)
         .build()
 }

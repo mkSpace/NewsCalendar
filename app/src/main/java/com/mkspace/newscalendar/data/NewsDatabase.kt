@@ -6,10 +6,19 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.funin.base.funinbase.BuildConfig
+import com.mkspace.newscalendar.data.db.ArticleDao
+import com.mkspace.newscalendar.data.db.ArticleQueryDateRelationDao
+import com.mkspace.newscalendar.data.db.ArticleRemoteKeyDao
 import com.mkspace.newscalendar.data.vo.Article
+import com.mkspace.newscalendar.data.vo.ArticleQueryDateRelation
+import com.mkspace.newscalendar.data.vo.remotekey.ArticleRemoteKey
 
 @Database(
-    entities = [Article::class],
+    entities = [
+        Article::class,
+        ArticleRemoteKey::class,
+        ArticleQueryDateRelation::class
+    ],
     version = 1
 )
 abstract class NewsDatabase : RoomDatabase() {
@@ -39,10 +48,14 @@ abstract class NewsDatabase : RoomDatabase() {
         private val CALLBACK_CLEAR_ALL = object : Callback() {
             override fun onOpen(db: SupportSQLiteDatabase) {
                 super.onOpen(db)
-                // TODO
+                db.execSQL("DELETE FROM articles")
+                db.execSQL("DELETE FROM article_remote_keys")
+                db.execSQL("DELETE FROM article_query_relations")
             }
         }
     }
 
     abstract fun articleDao(): ArticleDao
+    abstract fun articleQueryDateRelationDao(): ArticleQueryDateRelationDao
+    abstract fun articleRemoteKeyDao(): ArticleRemoteKeyDao
 }

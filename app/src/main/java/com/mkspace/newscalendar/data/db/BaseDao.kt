@@ -1,4 +1,4 @@
-package com.mkspace.newscalendar.data
+package com.mkspace.newscalendar.data.db
 
 import androidx.room.*
 
